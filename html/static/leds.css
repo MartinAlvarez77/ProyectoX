@@ -17,7 +17,7 @@ body {
     height: 100vh;
 }
 
-/* Sidebar de Navegación */
+/* Sidebar */
 .sidebar {
     width: 260px;
     background-color: #111827;
@@ -167,176 +167,139 @@ body {
     border-radius: 50%;
 }
 
-/* Grilla de Cámaras */
-.cameras-grid {
+/* Contenedor de Tarjetas LED */
+.led-container {
     padding: 32px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 24px;
-    flex-grow: 1;
+    max-width: 800px;
 }
 
-.camera-card {
+.led-card {
     background-color: #161b22;
     border: 1px solid #30363d;
     border-radius: 12px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: opacity 0.3s ease;
 }
 
-.camera-header {
+.led-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
+    padding: 16px 20px;
     background-color: #111827;
     border-bottom: 1px solid #30363d;
 }
 
-.cam-name {
-    font-size: 13px;
+.led-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.led-icon-glow {
+    font-size: 20px;
+    color: #f59e0b;
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+}
+
+.led-title-group h3 {
+    font-size: 16px;
     font-weight: 600;
     color: #ffffff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
-.live-icon {
-    color: #ef4444;
-    font-size: 8px;
-}
-
-.cam-status {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-}
-
-.cam-status.recording {
-    background-color: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-}
-
-.camera-view {
-    background-color: #0d1117;
-    height: 200px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.simulated-feed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: #30363d;
-}
-
-.cam-bg-icon {
-    font-size: 40px;
-}
-
-.timestamp {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    font-size: 10px;
-    font-weight: 600;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: #ffffff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-}
-
-.camera-footer {
-    padding: 12px 16px;
-    background-color: #111827;
-    border-top: 1px solid #30363d;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.led-title-group p {
     font-size: 12px;
     color: #8b949e;
+    margin-top: 2px;
 }
 
-.cam-actions {
-    display: flex;
-    gap: 8px;
+.status-indicator {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
 }
 
-.cam-actions button {
-    background-color: #21262d;
-    border: 1px solid #30363d;
-    color: #c9d1d9;
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.cam-actions button:hover {
-    background-color: #30363d;
-    color: #ffffff;
-}
-
-/* Estilo profesional para cuando las cámaras están desactivadas */
-.system-offline-message {
+.led-card-body {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    text-align: center;
-    padding: 40px;
+    gap: 20px;
 }
 
-.offline-icon {
-    font-size: 64px;
-    color: #ef4444;
-    margin-bottom: 20px;
-    opacity: 0.8;
-}
-
-.system-offline-message h2 {
-    font-size: 22px;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 8px;
-}
-
-.system-offline-message p {
-    font-size: 14px;
-    color: #8b949e;
-    max-width: 400px;
-    margin-bottom: 24px;
-}
-
-.btn-config-redirect {
-    background-color: #21262d;
-    border: 1px solid #30363d;
-    color: #58a6ff;
-    padding: 10px 20px;
+.slider-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.02);
+    padding: 14px;
     border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
+    border: 1px solid #21262d;
 }
 
-.btn-config-redirect:hover {
-    background-color: #30363d;
-    color: #ffffff;
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #c9d1d9;
+    font-weight: 500;
+}
+
+.brightness-range {
+    width: 100%;
+    accent-color: #3b82f6;
+    cursor: pointer;
+}
+
+.color-picker-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-picker-box span {
+    font-size: 13px;
+    color: #8b949e;
+    font-weight: 500;
+}
+
+.color-options {
+    display: flex;
+    gap: 12px;
+}
+
+.color-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #30363d;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+    border-color: #ffffff;
+}
+
+.setting-info-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #58a6ff;
+    font-size: 13px;
+}
+
+.setting-info-block i {
+    font-size: 16px;
 }

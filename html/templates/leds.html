@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Home | Control de Iluminación LED</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='leds.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BLOQUEO DE URL ESTRICTO ANTES DE CARGAR NADA -->
+    <script>
+        if (sessionStorage.getItem('powerHomeAuth') !== 'true') {
+            window.location.replace("{{ url_for('index') }}");
+        }
+    </script>
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegación -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-house-signal"></i>
+                <span>POWER HOME</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('camaras') }}"><i class="fa-solid fa-video"></i> Cámaras</a></li>
+                <li class="active"><a href="{{ url_for('leds') }}"><i class="fa-solid fa-lightbulb"></i> Luces LED</a></li>
+                <li><a href="{{ url_for('alarmas') }}"><i class="fa-solid fa-shield-halved"></i> Alarma y Sensores</a></li>
+                <li><a href="{{ url_for('configuracion') }}"><i class="fa-solid fa-gear"></i> Configuración</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="cerrarSesion()" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-title">
+                    <h1>Control de Iluminación</h1>
+                    <p id="led-subtitle">Gestión de tiras LED y ambientación inteligente</p>
+                </div>
+                <div class="user-profile">
+                    <span class="status-badge" id="led-status-badge"><span class="dot" id="status-dot"></span> <span id="status-text">Luces Activas</span></span>
+                    <div class="avatar">EZ</div>
+                </div>
+            </header>
+
+            <div id="content-container" style="flex-grow: 1; display: flex; flex-direction: column;">
+                <div class="led-container" id="ledsGrid">
+                    
+                    <div class="led-card" id="cardLiving">
+                        <div class="led-card-header">
+                            <div class="led-title-group">
+                                <i class="fa-solid fa-sun led-icon-glow"></i>
+                                <div>
+                                    <h3>Luces LED Living</h3>
+                                    <p>Tira LED RGB Principal</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator" id="livingStatusText">ENCENDIDO</span>
+                        </div>
+                        <div class="led-card-body">
+                            <div class="setting-item slider-box">
+                                <div class="slider-header">
+                                    <span>Intensidad de Brillo</span>
+                                    <span id="brightnessValue">75%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value="75" class="brightness-range" id="brightnessRange">
+                            </div>
+                            <div class="color-picker-box">
+                                <span>Ambiente / Color sugerido</span>
+                                <div class="color-options">
+                                    <button class="color-btn" style="background-color: #3b82f6;" data-color="blue" title="Azul Relax"></button>
+                                    <button class="color-btn" style="background-color: #10b981;" data-color="green" title="Verde Natural"></button>
+                                    <button class="color-btn" style="background-color: #f59e0b;" data-color="orange" title="Cálido Hogar"></button>
+                                    <button class="color-btn" style="background-color: #ef4444;" data-color="red" title="Alerta Nocturna"></button>
+                                    <button class="color-btn" style="background-color: #8b5cf6;" data-color="purple" title="Modo Cine"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="led-card" id="cardOutdoor">
+                        <div class="led-card-header">
+                            <div class="led-title-group">
+                                <i class="fa-solid fa-moon led-icon-glow"></i>
+                                <div>
+                                    <h3>Luces LED Exterior (Patio)</h3>
+                                    <p>Iluminación perimetral nocturna</p>
+                                </div>
+                            </div>
+                            <span class="status-indicator" id="outdoorStatusText">APAGADO</span>
+                        </div>
+                        <div class="led-card-body">
+                            <div class="setting-info-block">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <p>Esta iluminación responde de forma automática al sensor crepuscular o a la activación manual desde Configuración.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script externo vinculado -->
+    <script src="{{ url_for('static', filename='leds.js') }}"></script>
+</body>
+</html>

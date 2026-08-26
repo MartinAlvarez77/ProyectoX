@@ -1,63 +1,59 @@
-from flask import Flask, render_template, Response, jsonify
-import cv2
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
-# Estado global de la alarma
-alarm_state = {"triggered": False}
+# Intentamos configurar el GPIO 17 para la Raspberry Pi
+try:
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.output(17, GPIO.LOW)  # Apagado por defecto al iniciar
+    GPIO_DISPONIBLE = True
+except (ImportError, RuntimeError):
+    # Esto evita que la app se caiga si estás probando el código en una PC (Windows/Mac)
+    GPIO_DISPONIBLE = False
+    print("Aviso: RPi.GPIO no disponible. Ejecutándose en modo simulación.")
 
-def gen_frames():
-    cap = cv2.VideoCapture(0)  # Conexión a la webcam de la Raspberry Pi
-    prev_frame = None
-    
-    while True:
-        success, frame = cap.read()
-        if not success:
-            break
-        
-        # Procesamiento para detección de movimiento
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (21, 21), 0)
-        
-        if prev_frame is None:
-            prev_frame = gray
-            continue
-            
-        delta = cv2.absdiff(prev_frame, gray)
-        thresh = cv2.threshold(delta, 25, 255, cv2.THRESH_BINARY)[1]
-        
-        # Umbral de sensibilidad para el movimiento
-        if thresh.sum() > 1000000:
-            alarm_state["triggered"] = True
-            
-        prev_frame = gray
-        
-        # Codificar el frame para transmitirlo por streaming web
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
+# Ruta principal (Login)
 @app.route('/')
-def login():
+def index():
     return render_template('index.html')
 
-@app.route('/camaras.html')
+# Ruta para la página de Cámaras
+@app.route('/camaras')
 def camaras():
     return render_template('camaras.html')
 
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+# Ruta para la página de Luces LED
+@app.route('/leds')
+def leds():
+    return render_template('leds.html')
 
-@app.route('/alarm_status')
-def alarm_status():
-    return jsonify(alarm_state)
+# Ruta para la página de Alarmas y Sensores
+@app.route('/alarmas')
+def alarmas():
+    return render_template('alarmas.html')
 
-@app.route('/reset_alarm', methods=['POST'])
-def reset_alarm():
-    alarm_state["triggered"] = False
-    return jsonify({"status": "ok"})
+# Ruta para la página de Configuración
+@app.route('/configuracion')
+def configuracion():
+    return render_template('configuracion.html')
+
+# 🚨 NUEVA RUTA: Endpoint para controlar el GPIO 17 de la alarma desde el frontend
+@app.route('/api/alarma', methods=['POST'])
+def controlar_alarma():
+    data = request.get_json()
+    activar = data.get('activar', False)
+    
+    if GPIO_DISPONIBLE:
+        # HIGH (1) para activar la alarma / LOW (0) para apagar
+        GPIO.output(17, GPIO.HIGH if activar else GPIO.LOW)
+    
+    return jsonify({
+        'success': True, 
+        'estado_gpio_17': activar,
+        'modo_simulacion': not GPIO_DISPONIBLE
+    })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(debug=True, host="0.0.0.0", port=5000)

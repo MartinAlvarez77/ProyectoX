@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Home | Monitoreo de Alarma y Sensores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='alarmas.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BLOQUEO DE URL ESTRICTO ANTES DE CARGAR NADA -->
+    <script>
+        if (sessionStorage.getItem('powerHomeAuth') !== 'true') {
+            window.location.replace("{{ url_for('index') }}");
+        }
+    </script>
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegación -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-house-signal"></i>
+                <span>POWER HOME</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('camaras') }}"><i class="fa-solid fa-video"></i> Cámaras</a></li>
+                <li><a href="{{ url_for('leds') }}"><i class="fa-solid fa-lightbulb"></i> Luces LED</a></li>
+                <li class="active"><a href="{{ url_for('alarmas') }}"><i class="fa-solid fa-shield-halved"></i> Alarma y Sensores</a></li>
+                <li><a href="{{ url_for('configuracion') }}"><i class="fa-solid fa-gear"></i> Configuración</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="cerrarSesion()" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-title">
+                    <h1>Monitoreo de Sensores</h1>
+                    <p id="alarm-subtitle">Control de perímetro y alertas de movimiento</p>
+                </div>
+                <div class="user-profile">
+                    <span class="status-badge" id="alarm-status-badge"><span class="dot" id="status-dot"></span> <span id="alarm-status-text">Sistema Armado</span></span>
+                    <div class="avatar">EZ</div>
+                </div>
+            </header>
+
+            <div id="content-container" style="flex-grow: 1; display: flex; flex-direction: column;">
+                <div class="alarm-container" id="alarmGrid">
+                    
+                    <div class="alert-banner" id="motionAlertBanner" style="display: none;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>
+                            <h4>¡MOVIMIENTO DETECTADO!</h4>
+                            <p id="alertDescription">Sensor activo en zona desconocida.</p>
+                        </div>
+                    </div>
+
+                    <div class="alarm-header-card">
+                        <div class="alarm-info-main">
+                            <i class="fa-solid fa-shield-cat alarm-main-icon" id="mainShieldIcon"></i>
+                            <div>
+                                <h2 id="mainAlarmTitle">Estado del Perímetro: Armado</h2>
+                                <p id="mainAlarmDesc">Los sensores de movimiento se encuentran vigilando la propiedad.</p>
+                            </div>
+                        </div>
+                        <button class="btn-simulate" onclick="simularMovimiento()">
+                            <i class="fa-solid fa-satellite-dish"></i> Simular Disparo de Sensor
+                        </button>
+                    </div>
+
+                    <h3 class="section-title">Sensores Conectados</h3>
+                    <div class="sensors-grid">
+                        
+                        <div class="sensor-card" id="sensorFront">
+                            <div class="sensor-icon"><i class="fa-solid fa-person-walking"></i></div>
+                            <div class="sensor-details">
+                                <h4>Entrada Principal</h4>
+                                <p>Sensor de movimiento PIR</p>
+                            </div>
+                            <span class="sensor-state normal">Normal</span>
+                        </div>
+
+                        <div class="sensor-card" id="sensorBack">
+                            <div class="sensor-icon"><i class="fa-solid fa-person-walking"></i></div>
+                            <div class="sensor-details">
+                                <h4>Patio Trasero</h4>
+                                <p>Sensor de barrera infrarroja</p>
+                            </div>
+                            <span class="sensor-state normal">Normal</span>
+                        </div>
+
+                        <div class="sensor-card" id="sensorLiving">
+                            <div class="sensor-icon"><i class="fa-solid fa-house"></i></div>
+                            <div class="sensor-details">
+                                <h4>Living / Estar</h4>
+                                <p>Detector volumétrico interior</p>
+                            </div>
+                            <span class="sensor-state normal">Normal</span>
+                        </div>
+
+                        <div class="sensor-card" id="sensorGarage">
+                            <div class="sensor-icon"><i class="fa-solid fa-car"></i></div>
+                            <div class="sensor-details">
+                                <h4>Cochera</h4>
+                                <p>Sensor magnético de portón</p>
+                            </div>
+                            <span class="sensor-state normal">Normal</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script externo vinculado -->
+    <script src="{{ url_for('static', filename='alarmas.js') }}"></script>
+</body>
+</html>

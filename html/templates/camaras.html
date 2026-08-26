@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Home | Monitoreo de Cámaras</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='camaras.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BLOQUEO DE URL ESTRICTO ANTES DE CARGAR NADA -->
+    <script>
+        if (sessionStorage.getItem('powerHomeAuth') !== 'true') {
+            window.location.replace("{{ url_for('index') }}");
+        }
+    </script>
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegación -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-house-signal"></i>
+                <span>POWER HOME</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><a href="{{ url_for('camaras') }}"><i class="fa-solid fa-video"></i> Cámaras</a></li>
+                <li><a href="{{ url_for('leds') }}"><i class="fa-solid fa-lightbulb"></i> Luces LED</a></li>
+                <li><a href="{{ url_for('alarmas') }}"><i class="fa-solid fa-shield-halved"></i> Alarma y Sensores</a></li>
+                <li><a href="{{ url_for('configuracion') }}"><i class="fa-solid fa-gear"></i> Configuración</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="cerrarSesion()" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-title">
+                    <h1>Monitoreo en Vivo</h1>
+                    <p id="system-subtitle">Sistema de vigilancia activo • 4 Cámaras conectadas</p>
+                </div>
+                <div class="user-profile">
+                    <span class="status-badge" id="cam-status-badge"><span class="dot" id="status-dot"></span> <span id="status-text">En línea</span></span>
+                    <div class="avatar">EZ</div>
+                </div>
+            </header>
+
+            <div id="content-container" style="flex-grow: 1; display: flex; flex-direction: column;">
+                <div class="cameras-grid" id="camerasGrid">
+                    
+                    <!-- CÁMARA 1: ENTRADA PRINCIPAL -->
+                    <div class="camera-card">
+                        <div class="camera-header">
+                            <span class="cam-name"><i class="fa-solid fa-circle-dot live-icon"></i> Entrada Principal (USB 1)</span>
+                            <span class="cam-status recording">GRABANDO</span>
+                        </div>
+                        <div class="camera-view" style="position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <video id="webcamFeed1" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div class="timestamp" style="position: absolute; bottom: 10px; left: 10px; z-index: 2;">EN VIVO • USB 30FPS</div>
+                        </div>
+                        <div class="camera-footer">
+                            <span>Estado: USB Conectada</span>
+                            <div class="cam-actions">
+                                <button title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+                                <button title="Captura"><i class="fa-solid fa-camera"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CÁMARA 2: PATIO TRASERO -->
+                    <div class="camera-card">
+                        <div class="camera-header">
+                            <span class="cam-name"><i class="fa-solid fa-circle-dot live-icon"></i> Patio Trasero (USB 2)</span>
+                            <span class="cam-status recording">GRABANDO</span>
+                        </div>
+                        <div class="camera-view" style="position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <video id="webcamFeed2" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div class="timestamp" style="position: absolute; bottom: 10px; left: 10px; z-index: 2;">EN VIVO • USB 30FPS</div>
+                        </div>
+                        <div class="camera-footer">
+                            <span>Estado: USB Conectada</span>
+                            <div class="cam-actions">
+                                <button title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+                                <button title="Captura"><i class="fa-solid fa-camera"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CÁMARA 3: LIVING / ESTAR -->
+                    <div class="camera-card">
+                        <div class="camera-header">
+                            <span class="cam-name"><i class="fa-solid fa-circle-dot live-icon"></i> Living / Estar (USB 3)</span>
+                            <span class="cam-status recording">GRABANDO</span>
+                        </div>
+                        <div class="camera-view" style="position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <video id="webcamFeed3" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div class="timestamp" style="position: absolute; bottom: 10px; left: 10px; z-index: 2;">EN VIVO • USB 30FPS</div>
+                        </div>
+                        <div class="camera-footer">
+                            <span>Estado: USB Conectada</span>
+                            <div class="cam-actions">
+                                <button title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+                                <button title="Captura"><i class="fa-solid fa-camera"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CÁMARA 4: COCHERA -->
+                    <div class="camera-card">
+                        <div class="camera-header">
+                            <span class="cam-name"><i class="fa-solid fa-circle-dot live-icon"></i> Cochera (USB 4)</span>
+                            <span class="cam-status recording">GRABANDO</span>
+                        </div>
+                        <div class="camera-view" style="position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <video id="webcamFeed4" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div class="timestamp" style="position: absolute; bottom: 10px; left: 10px; z-index: 2;">EN VIVO • USB 30FPS</div>
+                        </div>
+                        <div class="camera-footer">
+                            <span>Estado: USB Conectada</span>
+                            <div class="cam-actions">
+                                <button title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+                                <button title="Captura"><i class="fa-solid fa-camera"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script externo vinculado -->
+    <script src="{{ url_for('static', filename='camaras.js') }}"></script>
+</body>
+</html>
