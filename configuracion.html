@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Home | Configuración y Automatización</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='configuracion.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BLOQUEO DE URL ESTRICTO ANTES DE CARGAR NADA -->
+    <script>
+        if (sessionStorage.getItem('powerHomeAuth') !== 'true') {
+            window.location.replace("{{ url_for('index') }}");
+        }
+    </script>
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar de Navegación -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-house-signal"></i>
+                <span>POWER HOME</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('camaras') }}"><i class="fa-solid fa-video"></i> Cámaras</a></li>
+                <li><a href="{{ url_for('leds') }}"><i class="fa-solid fa-lightbulb"></i> Luces LED</a></li>
+                <li><a href="{{ url_for('alarmas') }}"><i class="fa-solid fa-shield-halved"></i> Alarma y Sensores</a></li>
+                <li class="active"><a href="{{ url_for('configuracion') }}"><i class="fa-solid fa-gear"></i> Configuración</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="cerrarSesion()" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-title">
+                    <h1>Panel de Configuración</h1>
+                    <p>Gestión de seguridad, automatización y control de dispositivos</p>
+                </div>
+                <div class="user-profile">
+                    <span class="status-badge" id="config-status-badge"><span class="dot"></span> <span id="config-status-text">Sistema Armado</span></span>
+                    <div class="avatar">EZ</div>
+                </div>
+            </header>
+
+            <div class="config-container">
+                
+                <!-- Sección de Seguridad y Alarma -->
+                <div class="config-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <h3>Seguridad y Alarma</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Sistema de Alarma General</h4>
+                                <p>Activa/desactiva sensores de movimiento y perímetro</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="alarmToggle" data-setting="alarm" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <h4>Grabación Automática de Cámaras</h4>
+                                <p>Guardar registro ante eventos sospechosos</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="recordingToggle" data-setting="recording" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Luces LED -->
+                <div class="config-card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <h3>Control de Luces LED</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Luces LED Living</h4>
+                                <p>Tira LED RGB Principal</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="ledLivingToggle" data-setting="ledLiving" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item slider-box">
+                            <div>
+                                <span>Intensidad de Brillo (%)</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="75" class="brightness-range" id="brightnessRange" data-setting="brightness">
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <h4>Luces LED Exterior (Patio)</h4>
+                                <p>Iluminación perimetral nocturna</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="ledOutdoorToggle" data-setting="ledOutdoor">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script externo vinculado -->
+    <script src="{{ url_for('static', filename='configuracion.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Home | Iniciar Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>POWER HOME</h1>
+                <p>Ingresa a tu cuenta para continuar</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="ej. eze" required autocomplete="username">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+
+                <div id="error-message" class="error-message" style="display: none; color: #ef4444; font-size: 12px; margin-bottom: 15px; text-align: center;"></div>
+
+                <button type="submit" class="btn-submit">Entrar</button>
+            </form>
+
+            <div class="login-footer">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script externo vinculado -->
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+</body>
+</html>
